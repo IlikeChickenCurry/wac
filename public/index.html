@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Write and Chat is an AI-powered chatbot demo designed to help you improve your written English through engaging conversation practice. This tool is for demonstration purposes only and does not replace a professional teacher.">
+  <meta name="keywords" content="English, chatbot, written English, AI, language learning, conversation practice, demo">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Write and Chat">
+  <meta property="og:description" content="An AI-powered chatbot demo to help you improve your written English through conversation practice.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://writeandchat.com">
+  <!-- Remplacez l'URL de l'image par celle de votre image d'aperçu -->
+  <meta property="og:image" content="http://yourdomain.com/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Write and Chat">
+  <meta name="twitter:description" content="An AI-powered chatbot demo to help you improve your written English through conversation practice.">
+
+  <title>Write and Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global styles */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+    }
+    /* Header */
+    header {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: center; /* Centre le contenu */
+      align-items: center;
+      font-family: 'Montserrat', sans-serif;
+      position: relative;
+    }
+    header .site-title {
+      font-size: 1.8em;
+      text-align: center;
+    }
+    header .menu-icon {
+      position: absolute;
+      right: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .hamburger span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      margin: 4px 0;
+      transition: 0.4s;
+    }
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 20px;
+      background-color: #fff;
+      min-width: 150px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 1;
+    }
+    .dropdown a {
+      color: #333;
+      padding: 10px 15px;
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown a:hover {
+      background-color: #f1f1f1;
+    }
+    /* Main Content */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    #chatContainer {
+      width: 100%;
+      max-width: 600px;
+      background-color: #fff;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    #messageList {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      padding: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+    .message {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      max-width: 70%;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+    .user-message {
+      align-self: flex-end;
+      background-color: #DCF8C6;
+    }
+    .bot-message {
+      align-self: flex-start;
+      background-color: #ECECEC;
+    }
+    #inputContainer {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    #userInput {
+      flex: 1;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      min-width: 200px;
+    }
+    #sendButton {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+    #sendButton:hover {
+      background-color: #0056b3;
+    }
+    /* Selectors */
+    #selectContainer {
+      display: flex;
+      gap: 2%;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    #topicSelect, #difficultySelect {
+      width: 48%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    /* Footer */
+    footer {
+      background-color: #007bff;
+      color: #fff;
+      text-align: center;
+      padding: 15px 20px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    footer p {
+      margin: 5px 0;
+      font-size: 0.9em;
+    }
+    footer a {
+      color: #fff;
+      text-decoration: underline;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      header .menu-icon {
+        right: 10px;
+      }
+      #topicSelect, #difficultySelect {
+        width: 100%;
+      }
+      #inputContainer {
+        flex-direction: column;
+      }
+      #sendButton {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="site-title">Write and Chat</div>
+    <div class="menu-icon" id="menuIcon">
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <div class="dropdown" id="dropdownMenu">
+      <a href="index.html">Chat</a>
+      <a href="test.html">Test</a>
+      <a href="listen.html">Listen</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div id="chatContainer">
+      <div id="selectContainer">
+        <select id="topicSelect">
+          <option value="" disabled selected>Choose a topic...</option>
+          <option value="Travel">Travel</option>
+          <option value="Food">Food</option>
+          <option value="Music">Music</option>
+          <option value="Sports">Sports</option>
+          <option value="Health">Health</option>
+          <option value="Nature">Nature</option>
+          <option value="Society">Society</option>
+          <option value="Movies">Movies</option>
+        </select>
+        <select id="difficultySelect">
+          <option value="" disabled selected>Choose difficulty...</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="expert">Expert</option>
+        </select>
+      </div>
+      <div id="messageList"></div>
+      <div id="inputContainer">
+        <input type="text" id="userInput" placeholder="Enter your message..." />
+        <button id="sendButton">Send</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>Realized by bcaballero</p>
+    <p>This demo page is an AI-based tool for improving written English through conversation practice. It does not replace a professional teacher.</p>
+  </footer>
+
+  <script>
+    // Hamburger menu logic
+    const menuIcon = document.getElementById("menuIcon");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    menuIcon.addEventListener("click", () => {
+      dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+    });
+    window.addEventListener("click", (e) => {
+      if (!menuIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.style.display = "none";
+      }
+    });
+
+    // Chat logic
+    const messageList = document.getElementById("messageList");
+    const userInput = document.getElementById("userInput");
+    const sendButton = document.getElementById("sendButton");
+    const topicSelect = document.getElementById("topicSelect");
+    const difficultySelect = document.getElementById("difficultySelect");
+
+    sendButton.addEventListener("click", sendMessage);
+    userInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+    topicSelect.addEventListener("change", handleSelections);
+    difficultySelect.addEventListener("change", handleSelections);
+
+    let currentTopic = "";
+    let currentDifficulty = "";
+
+    function handleSelections() {
+      const topic = topicSelect.value;
+      const difficulty = difficultySelect.value;
+      if (topic && difficulty) {
+        currentTopic = topic;
+        currentDifficulty = difficulty;
+        messageList.innerHTML = "";
+        startConversation(topic, difficulty);
+      }
+    }
+
+    async function startConversation(topic, difficulty) {
+      const initialMessage = `Start a conversation about ${topic} for a ${difficulty} level English learner.`;
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: initialMessage })
+        });
+        const data = await response.json();
+        addMessage(data.response, "bot-message");
+      } catch (err) {
+        addMessage("Error initiating conversation.", "bot-message");
+        console.error(err);
+      }
+    }
+
+    async function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text) return;
+      userInput.value = "";
+      addMessage(text, "user-message");
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await response.json();
+        addMessage(data.response, "bot-message");
+      } catch (err) {
+        addMessage("Error calling the API.", "bot-message");
+        console.error(err);
+      }
+    }
+
+    function addMessage(text, cssClass) {
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("message", cssClass);
+      msgDiv.textContent = text;
+      messageList.appendChild(msgDiv);
+      messageList.scrollTop = messageList.scrollHeight;
+    }
+  </script>
+</body>
+</html>
+

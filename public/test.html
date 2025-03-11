@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Write and Chat is an AI-powered tool to help you improve your spoken and written English through interactive conversation practice.">
+  <meta name="keywords" content="English, chatbot, spoken English, pronunciation, AI, language learning, conversation, demo">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Write and Chat">
+  <meta property="og:description" content="An AI-powered demo to help you improve your spoken and written English through interactive conversation practice.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://yourdomain.com">
+  <meta property="og:image" content="http://yourdomain.com/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Write and Chat">
+  <meta name="twitter:description" content="An AI-powered demo to help you improve your spoken and written English through interactive conversation practice.">
+  <title>Write and Chat - Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+    }
+    header {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: center; 
+      align-items: center;
+      font-family: 'Montserrat', sans-serif;
+      position: relative;
+    }
+    header .site-title {
+      font-size: 1.8em;
+      text-align: center;
+    }
+    header .menu-icon {
+      position: absolute;
+      right: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .hamburger span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      margin: 4px 0;
+      transition: 0.4s;
+    }
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 20px;
+      background-color: #fff;
+      min-width: 150px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 1;
+    }
+    .dropdown a {
+      color: #333;
+      padding: 10px 15px;
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown a:hover {
+      background-color: #f1f1f1;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    #testContainer {
+      width: 100%;
+      max-width: 600px;
+      background-color: #fff;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    #difficultyContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    select {
+      padding: 8px;
+      font-size: 1em;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #testResult {
+      margin-top: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+      font-size: 1em;
+    }
+    footer {
+      background-color: #007bff;
+      color: #fff;
+      text-align: center;
+      padding: 15px 20px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    footer p {
+      margin: 5px 0;
+      font-size: 0.9em;
+    }
+    footer a {
+      color: #fff;
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      header .menu-icon {
+        right: 10px;
+      }
+      select, button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="site-title">Write and Chat</div>
+    <div class="menu-icon" id="menuIcon">
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <div class="dropdown" id="dropdownMenu">
+      <a href="index.html">Chat</a>
+      <a href="test.html">Test</a>
+      <a href="listen.html">Listen</a>
+    </div>
+  </header>
+  <main>
+    <div id="testContainer">
+      <h2 style="text-align: center;">Random Written Test</h2>
+      <div id="difficultyContainer">
+        <label for="difficultySelect">Select your difficulty level:</label>
+        <select id="difficultySelect">
+          <option value="" disabled selected>Choose level...</option>
+          <option value="A1">A1</option>
+          <option value="A2">A2</option>
+          <option value="B1">B1</option>
+          <option value="B2">B2</option>
+          <option value="C1">C1</option>
+          <option value="C2">C2</option>
+        </select>
+        <button id="generateTestButton">Generate Test</button>
+      </div>
+      <div id="testResult"></div>
+    </div>
+  </main>
+  <footer>
+    <p>Realized by bcaballero</p>
+    <p>This demo page is an AI-based tool for improving spoken and written English through interactive practice. It does not replace a professional teacher.</p>
+  </footer>
+  <script>
+    const generateTestButton = document.getElementById('generateTestButton');
+    const difficultySelect = document.getElementById('difficultySelect');
+    const testResultDiv = document.getElementById('testResult');
+
+    generateTestButton.addEventListener('click', async () => {
+      const level = difficultySelect.value;
+      if (!level) {
+        testResultDiv.innerHTML = "Please select a difficulty level.";
+        return;
+      }
+      testResultDiv.innerHTML = "Generating test...";
+      try {
+        const response = await fetch('/api/generate-test', {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ level })
+        });
+        const data = await response.json();
+        if (data.error) {
+          testResultDiv.innerHTML = "No test generated.";
+          return;
+        }
+        if (!data.questions) {
+          testResultDiv.innerHTML = "No questions found.";
+          return;
+        }
+        let html = "";
+        data.questions.forEach((question, index) => {
+          html += `<div style="margin-bottom:20px;">
+                     <p><strong>Q${index+1}:</strong> ${question.text}</p>`;
+          if (question.type === "multiple" && question.options) {
+            html += `<select class="answer-select" data-index="${index}">`;
+            question.options.forEach(option => {
+              html += `<option value="${option}">${option}</option>`;
+            });
+            html += `</select>`;
+          } else {
+            html += `<textarea class="answer-open" data-index="${index}" rows="3" style="width:100%;" placeholder="Your answer here"></textarea>`;
+          }
+          html += `</div>`;
+        });
+        html += `<button id="submitTestButton">Submit Test</button>`;
+        testResultDiv.innerHTML = html;
+        document.getElementById('submitTestButton').addEventListener('click', submitAnswers);
+      } catch (err) {
+        console.error('Error generating test:', err);
+        testResultDiv.innerHTML = "An error occurred while generating the test.";
+      }
+    });
+
+    async function submitAnswers() {
+      const selects = document.querySelectorAll('.answer-select');
+      const textareas = document.querySelectorAll('.answer-open');
+      const answers = [];
+      selects.forEach(sel => {
+        answers.push({
+          questionIndex: sel.getAttribute('data-index'),
+          answer: sel.value
+        });
+      });
+      textareas.forEach(txt => {
+        answers.push({
+          questionIndex: txt.getAttribute('data-index'),
+          answer: txt.value.trim()
+        });
+      });
+      // Ici, on envoie les réponses à un endpoint /api/submit-test (à implémenter côté serveur)
+      // pour la correction / évaluation.
+      try {
+        const response = await fetch('/api/submit-test', {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ answers })
+        });
+        const data = await response.json();
+        // Suppose que data.correction contient la correction/évaluation
+        testResultDiv.innerHTML = `<strong>Test Correction:</strong><br>${data.correction || 'No correction data'}`;
+      } catch (err) {
+        console.error('Error submitting test:', err);
+        testResultDiv.innerHTML = "An error occurred while submitting your test.";
+      }
+    }
+
+    const menuIcon = document.getElementById("menuIcon");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    menuIcon.addEventListener("click", () => {
+      dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+    });
+    window.addEventListener("click", (e) => {
+      if (!menuIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
+
